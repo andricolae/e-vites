@@ -1,0 +1,159 @@
+<div class="home-container">
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Create Unforgettable Events</h1>
+      <p class="hero-subtitle">
+        Plan private events and send personalized invitations in minutes.
+        No hassle, no complex setup—just beautiful events that bring people
+        together.
+      </p>
+      <div class="hero-actions">
+        <button mat-raised-button
+          class="cta-button primary-cta"
+          color="primary"
+          [routerLink]="['/templates']">
+          <mat-icon>event</mat-icon>
+          Create Your First Event
+        </button>
+
+        <button mat-stroked-button
+          class="secondary-cta"
+          (click)="onSeeHowItWorks()">
+          <mat-icon>play_circle</mat-icon>
+          See How It Works
+        </button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <mat-card class="demo-card mat-elevation-z4">
+        <mat-card-header>
+          <div mat-card-avatar class="demo-avatar">
+            <mat-icon>celebration</mat-icon>
+          </div>
+          <mat-card-title>Maria's Birthday Party</mat-card-title>
+          <mat-card-subtitle>Saturday, 10 Dec • 19:00</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="demo-text">Join us for an evening of celebration!</p>
+          <div class="demo-stats">
+            <span class="stat"><mat-icon>person</mat-icon> 12 attending</span>
+            <span class="stat"><mat-icon>check_circle</mat-icon> 3 maybe</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <section class="features-section">
+    <h2 class="section-title">Why Choose EventLink?</h2>
+    <div class="features-grid">
+      <mat-card class="feature-card mat-elevation-z2">
+        <div class="feature-icon">
+          <mat-icon color="primary">flash_on</mat-icon>
+        </div>
+        <mat-card-content>
+          <h3>Lightning Fast Setup</h3>
+          <p>Create beautiful events in under 2 minutes. Our intuitive interface
+            gets you from idea to invitation instantly.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card mat-elevation-z2">
+        <div class="feature-icon">
+          <mat-icon color="primary">link</mat-icon>
+        </div>
+        <mat-card-content>
+          <h3>Smart Invitation Links</h3>
+          <p>Generate unique, personalized invitation links for each guest.
+            Track RSVPs without requiring sign-ups.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card mat-elevation-z2">
+        <div class="feature-icon">
+          <mat-icon color="primary">security</mat-icon>
+        </div>
+        <mat-card-content>
+          <h3>Privacy First</h3>
+          <p>Your events stay private. Secure one-time RSVP system ensures only
+            invited guests can respond.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <section class="benefits-section">
+    <mat-card class="benefits-card mat-elevation-z1">
+      <div class="benefits-content">
+        <div class="benefits-text">
+          <h2>Perfect for Any Occasion</h2>
+          <div class="benefit-list">
+            <div class="benefit-item">
+              <mat-icon color="primary">cake</mat-icon>
+              <span>Birthday parties & celebrations</span>
+            </div>
+            <div class="benefit-item">
+              <mat-icon color="primary">family_restroom</mat-icon>
+              <span>Family reunions & gatherings</span>
+            </div>
+            <div class="benefit-item">
+              <mat-icon color="primary">business</mat-icon>
+              <span>Corporate events & meetings</span>
+            </div>
+            <div class="benefit-item">
+              <mat-icon color="primary">favorite</mat-icon>
+              <span>Weddings & special occasions</span>
+            </div>
+            <div class="benefit-item">
+              <mat-icon color="primary">sports_soccer</mat-icon>
+              <span>Sports events & tournaments</span>
+            </div>
+            <div class="benefit-item">
+              <mat-icon color="primary">school</mat-icon>
+              <span>Educational workshops & classes</span>
+            </div>
+          </div>
+        </div>
+        <div class="benefits-visual">
+          <div class="floating-cards">
+            <div class="floating-card card-1">
+              <mat-icon>cake</mat-icon>
+              <span>Birthday</span>
+            </div>
+            <div class="floating-card card-2">
+              <mat-icon>business</mat-icon>
+              <span>Meeting</span>
+            </div>
+            <div class="floating-card card-3">
+              <mat-icon>favorite</mat-icon>
+              <span>Wedding</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Ready to Create Your Event?</h2>
+      <p>Join thousands of happy event planners who trust EventLink</p>
+      <button mat-raised-button
+        class="cta-button final-cta"
+        color="primary"
+        [routerLink]="['/templates']">
+        <mat-icon>rocket_launch</mat-icon>
+        Start Planning Now
+      </button>
+    </div>
+  </section>
+
+  <button
+    mat-fab
+    class="scroll-to-top-btn"
+    [class.visible]="showScrollToTop"
+    (click)="scrollToTop()"
+    color="primary">
+    <mat-icon>keyboard_arrow_up</mat-icon>
+  </button>
+</div>

@@ -1,0 +1,115 @@
+<mat-toolbar class="header-toolbar">
+  <div class="toolbar-content">
+    <span class="logo" routerLink="/home">
+      <div class="logo-icon">
+        <img src="/favicon.ico" alt="EventLink Logo" width="24" height="24" />
+      </div>
+      <span class="logo-text">EventLink</span>
+      <div class="logo-shine"></div>
+    </span>
+
+    <nav class="nav-links">
+      <a mat-button routerLink="/dashboard" routerLinkActive="active"
+        class="nav-link">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </a>
+      <a mat-button routerLink="/events" routerLinkActive="active"
+        class="nav-link">
+        <mat-icon>event</mat-icon>
+        Events
+      </a>
+      <a mat-button routerLink="/templates" routerLinkActive="active"
+        class="nav-link">
+        <mat-icon>design_services</mat-icon>
+        Templates
+      </a>
+    </nav>
+
+    <span class="spacer"></span>
+
+    <div class="user-menu">
+      <div class="user-info">
+        <span class="user-greeting">Hello,</span>
+        <span class="user-name">Guest</span>
+      </div>
+
+      <button mat-icon-button
+        [matMenuTriggerFor]="menu"
+        class="user-avatar-button">
+        <div class="user-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+      </button>
+
+      <mat-menu #menu="matMenu" class="user-dropdown">
+        <div class="menu-header">
+          <div class="menu-user-info">
+            <div class="menu-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+            <div class="menu-user-details">
+              <span class="menu-user-name">Unregistered</span>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item routerLink="/dashboard" class="menu-item">
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </button>
+
+        <button mat-menu-item routerLink="/profile" class="menu-item">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </button>
+
+        <button mat-menu-item routerLink="/settings" class="menu-item">
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+
+        <mat-divider></mat-divider>
+
+      </mat-menu>
+    </div>
+
+    <button mat-icon-button
+      class="mobile-menu-button"
+      [matMenuTriggerFor]="mobileMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <mat-menu #mobileMenu="matMenu" class="mobile-dropdown">
+      <button mat-menu-item routerLink="/dashboard" class="mobile-menu-item">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </button>
+
+      <button mat-menu-item routerLink="/events" class="mobile-menu-item">
+        <mat-icon>event</mat-icon>
+        <span>Events</span>
+      </button>
+
+      <button mat-menu-item routerLink="/templates" class="mobile-menu-item">
+        <mat-icon>design_services</mat-icon>
+        <span>Templates</span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item routerLink="/profile" class="mobile-menu-item">
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+      </button>
+
+      <button mat-menu-item routerLink="/settings" class="mobile-menu-item">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </button>
+
+    </mat-menu>
+  </div>
+</mat-toolbar>
