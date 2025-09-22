@@ -1,0 +1,26 @@
+@if (notification){
+<div class="notification" [ngClass]="'notification-' + notification.type"
+  [@slideIn]>
+  <div class="notification-content">
+    <div class="notification-icon">
+      @switch (notification.type) {
+      @case ('success') {
+      <span>✓</span>
+      }
+      @case ('error') {
+      <span>✕</span>
+      }
+      @case ('warning') {
+      <span>⚠</span>
+      }
+      @case ('info') {
+      <span>ℹ</span>
+      }
+      }
+
+    </div>
+    <div class="notification-message">{{ notification.message }}</div>
+    <button class="notification-close" (click)="close()">✕</button>
+  </div>
+</div>
+}
