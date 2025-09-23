@@ -23,14 +23,6 @@ export class Home {
     this.showScrollToTop = window.pageYOffset > 300;
   }
 
-  // onCreateEvent() {
-  //   this.notificationService.showNotification({
-  //     message: 'Event created successfully!',
-  //     type: 'success',
-  //     duration: 3000,
-  //   });
-  // }
-
   onSeeHowItWorks() {
     this.spinnerService.show();
     setTimeout(() => {
