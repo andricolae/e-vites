@@ -1,6 +1,6 @@
 <mat-toolbar class="header-toolbar">
   <div class="toolbar-content">
-    <span class="logo" routerLink="/home">
+    <span class="logo" routerLink="/">
       <div class="logo-icon">
         <img src="/favicon.ico" alt="EventLink Logo" width="24" height="24" />
       </div>
@@ -8,6 +8,7 @@
       <div class="logo-shine"></div>
     </span>
 
+    @if (isAuthenticated) {
     <nav class="nav-links">
       <a mat-button routerLink="/dashboard" routerLinkActive="active"
         class="nav-link">
@@ -25,13 +26,15 @@
         Templates
       </a>
     </nav>
+    }
 
     <span class="spacer"></span>
 
+    @if (isAuthenticated) {
     <div class="user-menu">
       <div class="user-info">
         <span class="user-greeting">Hello,</span>
-        <span class="user-name">Guest</span>
+        <span class="user-name">{{ userName }}</span>
       </div>
 
       <button mat-icon-button
@@ -49,7 +52,8 @@
               <mat-icon>person</mat-icon>
             </div>
             <div class="menu-user-details">
-              <span class="menu-user-name">Unregistered</span>
+              <span class="menu-user-name">{{ userName }}</span>
+              <span class="menu-user-email">{{ currentUser?.email }}</span>
             </div>
           </div>
         </div>
@@ -73,6 +77,11 @@
 
         <mat-divider></mat-divider>
 
+        <button mat-menu-item (click)="onLogout()"
+          class="menu-item logout-item">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
       </mat-menu>
     </div>
 
@@ -110,6 +119,24 @@
         <span>Settings</span>
       </button>
 
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="onLogout()"
+        class="mobile-menu-item logout-item">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
     </mat-menu>
+    } @else {
+    <div class="auth-actions">
+      <button mat-raised-button
+        routerLink="/auth"
+        color="primary"
+        class="login-button">
+        <mat-icon>login</mat-icon>
+        Login
+      </button>
+    </div>
+    }
   </div>
 </mat-toolbar>
