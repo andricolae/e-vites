@@ -1,1 +1,200 @@
-<p>templates works!</p>
+<div class="templates-container">
+  <div class="header-section">
+    <div class="header-content">
+      <h1 class="page-title" data-text="Create New Event">Create New Event</h1>
+      <p class="page-subtitle">Design your perfect event with our easy-to-use
+        form</p>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <mat-card class="event-form-card">
+      <mat-card-header class="form-header">
+        <mat-icon class="form-icon">event_note</mat-icon>
+        <div class="form-title">
+          <mat-card-title>Event Details</mat-card-title>
+          <mat-card-subtitle>Fill in the information about your
+            event</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content class="form-content">
+        <form [formGroup]="eventForm" (ngSubmit)="onSubmit()"
+          class="event-form">
+
+          <div class="form-section-title">
+            <mat-icon>category</mat-icon>
+            <span>Event Type</span>
+          </div>
+
+          <div class="event-types-grid">
+            @for (eventType of eventTypes; track eventType.value) {
+            <mat-card
+              class="event-type-card"
+              [class.selected]="eventForm.get('eventType')?.value === eventType.value"
+              (click)="eventForm.patchValue({eventType: eventType.value}); onEventTypeSelect(eventType.value)">
+              <mat-icon>{{ eventType.icon }}</mat-icon>
+              <span>{{ eventType.label }}</span>
+              @if (eventForm.get('eventType')?.value === eventType.value) {
+              <mat-icon class="check-icon">check_circle</mat-icon>
+              }
+            </mat-card>
+            }
+          </div>
+
+          @if (hasError('eventType', 'required')) {
+          <mat-error class="standalone-error">Please select an event
+            type</mat-error>
+          }
+
+          <div class="form-section-title">
+            <mat-icon>info</mat-icon>
+            <span>Basic Information</span>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Event Title</mat-label>
+            <input matInput
+              formControlName="title"
+              placeholder="e.g., John's 30th Birthday Party"
+              maxlength="100">
+            <mat-icon matSuffix>title</mat-icon>
+            <mat-hint align="end">{{ eventForm.get('title')?.value?.length || 0
+              }}/100</mat-hint>
+            @if (getErrorMessage('title')) {
+            <mat-error>{{ getErrorMessage('title') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="form-section-title">
+            <mat-icon>schedule</mat-icon>
+            <span>Date & Time</span>
+          </div>
+
+          <div class="date-time-row">
+            <mat-form-field appearance="outline" class="date-field">
+              <mat-label>Event Date</mat-label>
+              <input matInput
+                [matDatepicker]="picker"
+                formControlName="date"
+                [min]="minDate"
+                placeholder="Select date">
+              <mat-datepicker-toggle matSuffix
+                [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              @if (getErrorMessage('date')) {
+              <mat-error>{{ getErrorMessage('date') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="time-field">
+              <mat-label>Event Time</mat-label>
+              <mat-select formControlName="time" placeholder="Select time">
+                @for (time of timeSlots; track time) {
+                <mat-option [value]="time">{{ time }}</mat-option>
+                }
+              </mat-select>
+              <mat-icon matSuffix>access_time</mat-icon>
+              @if (getErrorMessage('time')) {
+              <mat-error>{{ getErrorMessage('time') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="form-section-title">
+            <mat-icon>location_on</mat-icon>
+            <span>Location</span>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Event Location</mat-label>
+            <input matInput
+              formControlName="location"
+              placeholder="e.g., Central Park, New York, NY"
+              maxlength="200">
+            <mat-icon matSuffix>place</mat-icon>
+            <mat-hint align="end">{{ eventForm.get('location')?.value?.length ||
+              0 }}/200</mat-hint>
+            @if (getErrorMessage('location')) {
+            <mat-error>{{ getErrorMessage('location') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="form-section-title">
+            <mat-icon>description</mat-icon>
+            <span>Description</span>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Event Description</mat-label>
+            <textarea matInput
+              formControlName="description"
+              rows="4"
+              placeholder="Tell your guests what to expect..."
+              maxlength="1000"></textarea>
+            <mat-icon matSuffix>notes</mat-icon>
+            <mat-hint align="end">{{ eventForm.get('description')?.value?.length
+              || 0 }}/1000</mat-hint>
+            @if (getErrorMessage('description')) {
+            <mat-error>{{ getErrorMessage('description') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button
+              mat-stroked-button
+              type="button"
+              class="clear-btn"
+              (click)="onClearForm()"
+              [disabled]="isLoading">
+              <mat-icon>clear_all</mat-icon>
+              Clear Form
+            </button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              class="submit-btn"
+              [disabled]="eventForm.invalid || isLoading">
+              @if (isLoading) {
+              <mat-icon class="spinning">refresh</mat-icon>
+              } @else {
+              <mat-icon>add_circle</mat-icon>
+              }
+              Create Event
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- <div class="help-section">
+    <mat-card class="help-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="help-icon">help_outline</mat-icon>
+        <mat-card-title>Need Help?</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="help-tips">
+          <div class="tip">
+            <mat-icon>lightbulb</mat-icon>
+            <span>Choose a clear, descriptive title that tells guests what the
+              event is about.</span>
+          </div>
+          <div class="tip">
+            <mat-icon>location_on</mat-icon>
+            <span>Be specific with the location - include the full address if
+              possible.</span>
+          </div>
+          <div class="tip">
+            <mat-icon>description</mat-icon>
+            <span>Use the description to set expectations and include any
+              special instructions.</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div> -->
+</div>

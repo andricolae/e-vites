@@ -104,7 +104,6 @@ export class AuthService {
     this.user.next(null);
     localStorage.removeItem('userData');
     localStorage.removeItem('userName');
-    console.log('User logged out!');
     this.router.navigate(['/']);
   }
 
