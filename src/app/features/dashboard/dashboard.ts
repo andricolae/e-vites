@@ -155,6 +155,32 @@ export class Dashboard implements OnInit, OnDestroy {
     });
   }
 
+  onGenerateInviteLink(event: EventModel): void {
+    const inviteLink = this.eventService.generateInviteLink(event.id!);
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(inviteLink).then(() => {
+        this.notificationService.showNotification({
+          message: 'Invite link copied to clipboard!',
+          type: 'success',
+          duration: 4000
+        });
+      }).catch(() => {
+        this.showInviteLinkDialog(inviteLink);
+      });
+    } else {
+      this.showInviteLinkDialog(inviteLink);
+    }
+  }
+
+  private showInviteLinkDialog(link: string): void {
+    this.notificationService.showNotification({
+      message: `Invite link: ${link}`,
+      type: 'info',
+      duration: 10000
+    });
+  }
+
   onRefresh(): void {
     this.loadEvents();
   }

@@ -5,6 +5,7 @@ import { Events } from './features/events/events';
 import { Templates } from './features/templates/templates';
 import { Auth } from './features/auth/auth';
 import { AuthGuard } from './core/auth.guard';
+import { EventView } from './features/event-view/event-view';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'dashboard', component: Dashboard, canActivate: [AuthGuard] },
   { path: 'events', component: Events, canActivate: [AuthGuard] },
   { path: 'templates', component: Templates, canActivate: [AuthGuard] },
+  { path: 'event/:id', component: EventView },
   { path: '**', redirectTo: '' }
 ];

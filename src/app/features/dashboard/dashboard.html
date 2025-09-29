@@ -112,6 +112,10 @@
                   <mat-icon>visibility</mat-icon>
                   <span>View Details</span>
                 </button>
+                <button mat-menu-item (click)="onGenerateInviteLink(event)">
+                  <mat-icon>link</mat-icon>
+                  <span>Generate Invite Link</span>
+                </button>
                 <button mat-menu-item (click)="onEditEvent(event)">
                   <mat-icon>edit</mat-icon>
                   <span>Edit</span>
@@ -182,6 +186,10 @@
                 <button mat-menu-item (click)="onViewEvent(event)">
                   <mat-icon>visibility</mat-icon>
                   <span>View Details</span>
+                </button>
+                <button mat-menu-item (click)="onGenerateInviteLink(event)">
+                  <mat-icon>link</mat-icon>
+                  <span>Generate Invite Link</span>
                 </button>
                 <mat-divider></mat-divider>
                 <button mat-menu-item (click)="onDeleteEvent(event)"

@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MaterialModule } from '../../shared/material.module';
 import { EventService } from '../../core/services/event.service';
 import { SpinnerService } from '../../core/services/spinner.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { CommonModule } from '@angular/common';
+import { EventModel } from '../../core/event.model';
 
 @Component({
   selector: 'app-templates',
@@ -18,7 +19,10 @@ export class Templates implements OnInit, OnDestroy {
   eventForm!: FormGroup;
   isLoading = false;
   minDate = new Date();
-  private subscription!: Subscription;
+  private subscription = new Subscription();
+
+  isEditMode = false;
+  editingEventId: string | null = null;
 
   eventTypes = [
     { value: 'birthday', label: 'Birthday Party', icon: 'cake' },
@@ -42,18 +46,18 @@ export class Templates implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private eventService: EventService,
     private router: Router,
+    private route: ActivatedRoute,
     private spinnerService: SpinnerService,
     private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
     this.initForm();
+    this.checkForEditMode();
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
   private initForm(): void {
@@ -67,9 +71,82 @@ export class Templates implements OnInit, OnDestroy {
     });
   }
 
+  private checkForEditMode(): void {
+    const editSub = this.route.queryParams.subscribe(params => {
+      if (params['edit']) {
+        this.isEditMode = true;
+        this.editingEventId = params['edit'];
+        this.loadEventForEdit(params['edit']);
+      }
+    });
+    this.subscription.add(editSub);
+  }
+
+  private loadEventForEdit(eventId: string): void {
+    this.spinnerService.show();
+
+    const loadSub = this.eventService.getUserEvents().subscribe({
+      next: (events) => {
+        const eventToEdit = events.find(e => e.id === eventId);
+
+        if (eventToEdit) {
+          const eventType = this.determineEventType(eventToEdit.title);
+
+          this.eventForm.patchValue({
+            title: eventToEdit.title,
+            eventType: eventType,
+            date: eventToEdit.date,
+            time: eventToEdit.time,
+            location: eventToEdit.location,
+            description: eventToEdit.description
+          });
+
+          this.spinnerService.hide();
+          this.notificationService.showNotification({
+            message: 'Event loaded for editing',
+            type: 'info',
+            duration: 2000
+          });
+        } else {
+          this.spinnerService.hide();
+          this.notificationService.showNotification({
+            message: 'Event not found',
+            type: 'error',
+            duration: 3000
+          });
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading event:', error);
+        this.spinnerService.hide();
+        this.notificationService.showNotification({
+          message: 'Failed to load event',
+          type: 'error',
+          duration: 3000
+        });
+        this.router.navigate(['/dashboard']);
+      }
+    });
+
+    this.subscription.add(loadSub);
+  }
+
+  private determineEventType(title: string): string {
+    const titleLower = title.toLowerCase();
+
+    for (const type of this.eventTypes) {
+      if (titleLower.includes(type.value)) {
+        return type.value;
+      }
+    }
+
+    return 'other';
+  }
+
   onEventTypeSelect(eventType: string): void {
     const selectedType = this.eventTypes.find(type => type.value === eventType);
-    if (selectedType && selectedType.value !== 'other') {
+    if (selectedType && selectedType.value !== 'other' && !this.isEditMode) {
       if (!this.eventForm.get('title')?.value) {
         this.eventForm.patchValue({
           title: `My ${selectedType.label}`
@@ -97,37 +174,72 @@ export class Templates implements OnInit, OnDestroy {
       description: formValue.description.trim()
     };
 
-    this.subscription = this.eventService.createEvent(eventData).subscribe({
-      next: (eventId) => {
-        this.isLoading = false;
-        this.spinnerService.hide();
+    if (this.isEditMode && this.editingEventId) {
+      const updateSub = this.eventService.updateEvent(this.editingEventId, eventData).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.spinnerService.hide();
 
-        this.notificationService.showNotification({
-          message: 'Event created successfully! You can now manage your event from the dashboard.',
-          type: 'success',
-          duration: 4000
-        });
+          this.notificationService.showNotification({
+            message: 'Event updated successfully!',
+            type: 'success',
+            duration: 3000
+          });
 
-        this.eventForm.reset();
-        this.initForm();
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 1000);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.spinnerService.hide();
 
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 1500);
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.spinnerService.hide();
+          console.error('Error updating event:', error);
 
-        console.error('Error creating event:', error);
+          this.notificationService.showNotification({
+            message: 'Failed to update event. Please try again.',
+            type: 'error',
+            duration: 4000
+          });
+        }
+      });
 
-        this.notificationService.showNotification({
-          message: 'Failed to create event. Please try again.',
-          type: 'error',
-          duration: 4000
-        });
-      }
-    });
+      this.subscription.add(updateSub);
+    } else {
+      const createSub = this.eventService.createEvent(eventData).subscribe({
+        next: (eventId) => {
+          this.isLoading = false;
+          this.spinnerService.hide();
+
+          this.notificationService.showNotification({
+            message: 'Event created successfully!',
+            type: 'success',
+            duration: 4000
+          });
+
+          this.eventForm.reset();
+          this.initForm();
+
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 1500);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.spinnerService.hide();
+
+          console.error('Error creating event:', error);
+
+          this.notificationService.showNotification({
+            message: 'Failed to create event. Please try again.',
+            type: 'error',
+            duration: 4000
+          });
+        }
+      });
+
+      this.subscription.add(createSub);
+    }
   }
 
   private markFormGroupTouched(): void {

@@ -13,7 +13,8 @@ import {
   DocumentReference,
   QuerySnapshot,
   DocumentData,
-  getDoc
+  getDoc,
+  Timestamp
 } from '@angular/fire/firestore';
 import { Observable, from, map, catchError, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -45,7 +46,6 @@ export class EventService {
       eventData.description,
       userEmail
     );
-
 
     const eventsRef = collection(this.firestore, this.eventsCollection);
 
@@ -105,12 +105,33 @@ export class EventService {
     );
   }
 
+  getEventById(eventId: string): Observable<EventModel | null> {
+    const eventRef = doc(this.firestore, this.eventsCollection, eventId);
+
+    return from(getDoc(eventRef)).pipe(
+      map((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          return EventModel.fromFirestore(docSnapshot.data(), docSnapshot.id);
+        }
+        return null;
+      }),
+      catchError((error) => {
+        console.error('Error getting event by ID:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   updateEvent(eventId: string, eventData: Partial<Event>): Observable<void> {
     const eventRef = doc(this.firestore, this.eventsCollection, eventId);
-    const updateData = {
+    const updateData: any = {
       ...eventData,
       updatedAt: new Date()
     };
+
+    if (eventData.date) {
+      updateData.date = Timestamp.fromDate(eventData.date);
+    }
 
     return from(updateDoc(eventRef, updateData)).pipe(
       catchError((error) => {
@@ -133,5 +154,10 @@ export class EventService {
   canEditEvent(event: EventModel): boolean {
     const userEmail = this.authService.getEmail();
     return userEmail === event.createdBy;
+  }
+
+  generateInviteLink(eventId: string): string {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/event/${eventId}`;
   }
 }
