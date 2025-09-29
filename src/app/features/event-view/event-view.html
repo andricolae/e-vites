@@ -1,0 +1,117 @@
+<div class="event-view-container">
+  @if (isLoading) {
+  <div class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading event details...</p>
+  </div>
+  } @else if (notFound) {
+  <div class="not-found-state">
+    <mat-card class="error-card">
+      <mat-card-content>
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <h2>Event Not Found</h2>
+        <p>The event you're looking for doesn't exist or has been removed.</p>
+        <button mat-raised-button color="primary" (click)="goHome()">
+          <mat-icon>home</mat-icon>
+          Go to Homepage
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  } @else if (event) {
+  <div class="event-view-content">
+    <div class="event-header">
+      <div class="header-background"></div>
+      <div class="header-content">
+        <div class="event-icon">
+          <mat-icon>{{ getEventTypeIcon(event.title) }}</mat-icon>
+        </div>
+        <h1 class="event-title">{{ event.title }}</h1>
+        <div class="event-status" [class.upcoming]="event.isUpcoming"
+          [class.past]="event.isPast">
+          <mat-icon>{{ event.isUpcoming ? 'schedule' : 'check_circle'
+            }}</mat-icon>
+          <span>{{ event.isUpcoming ? 'Upcoming Event' : 'Past Event' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="event-details-section">
+      <mat-card class="details-card">
+        <mat-card-content>
+          <div class="details-grid">
+            <div class="detail-item">
+              <div class="detail-icon">
+                <mat-icon>calendar_today</mat-icon>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Date</span>
+                <span class="detail-value">{{ event.formattedDate }}</span>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <mat-icon>access_time</mat-icon>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Time</span>
+                <span class="detail-value">{{ event.time }}</span>
+              </div>
+            </div>
+
+            <div class="detail-item full-width">
+              <div class="detail-icon">
+                <mat-icon>location_on</mat-icon>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Location</span>
+                <span class="detail-value">{{ event.location }}</span>
+              </div>
+            </div>
+
+            <div class="detail-item full-width description">
+              <div class="detail-icon">
+                <mat-icon>description</mat-icon>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Description</span>
+                <p class="detail-description">{{ event.description }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="action-buttons">
+        <button mat-raised-button class="action-btn action-btn-primary"
+          (click)="addToCalendar()">
+          <mat-icon>event</mat-icon>
+          Add to Calendar
+        </button>
+
+        <button mat-raised-button class="action-btn action-btn-secondary"
+          (click)="shareEvent()">
+          <mat-icon>share</mat-icon>
+          Share Event
+        </button>
+      </div>
+
+      <div class="event-footer">
+        <mat-card class="footer-card">
+          <mat-card-content>
+            <div class="footer-content">
+              <mat-icon>celebration</mat-icon>
+              <div class="footer-text">
+                <p class="footer-title">Powered by EventLink</p>
+                <p class="footer-subtitle">Create your own events at <a
+                    href="https://eventlink-delta.vercel.app/">eventlink.vercel.app</a></p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  }
+</div>

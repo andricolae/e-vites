@@ -160,9 +160,9 @@
               @if (isLoading) {
               <mat-icon class="spinning">refresh</mat-icon>
               } @else {
-              <mat-icon>add_circle</mat-icon>
+              <mat-icon>{{ isEditMode ? 'save' : 'add_circle' }}</mat-icon>
               }
-              Create Event
+              {{ isEditMode ? 'Update Event' : 'Create Event' }}
             </button>
           </div>
         </form>
